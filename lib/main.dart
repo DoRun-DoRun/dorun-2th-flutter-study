@@ -41,32 +41,46 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CreatePage(),
+                  ),
+                );
+              },
+              icon: Icon(Icons.plus_one),
+            )
+          ],
+        ),
         body: Column(
-      children: [
-        todoList(
-            title: "To Do", textColor: "#077522", backgroundColor: "#FF8181"),
-        todoList(
-            title: "To Schedule",
-            textColor: "#6677BB",
-            backgroundColor: "#FCE38A"),
-        todoList(
-            title: "To Delegate",
-            textColor: "#BA55D3",
-            backgroundColor: "#EAFFD0"),
-        todoList(
-            title: "To Delete",
-            textColor: "#569889",
-            backgroundColor: "#95E1D3"),
-      ],
-    ));
+          children: [
+            todoList(
+                title: "To Do", textColor: 0x077522, backgroundColor: 0xFF8181),
+            todoList(
+                title: "To Schedule",
+                textColor: 0x6677BB,
+                backgroundColor: 0xFCE38A),
+            todoList(
+                title: "To Delegate",
+                textColor: 0xBA55D3,
+                backgroundColor: 0xEAFFD0),
+            todoList(
+                title: "To Delete",
+                textColor: 0x569889,
+                backgroundColor: 0x95E1D3),
+          ],
+        ));
   }
 }
 
 class todoList extends StatelessWidget {
   final String title;
-  final String textColor;
-  final String backgroundColor;
+  final int textColor;
+  final int backgroundColor;
 
   const todoList({
     super.key,
@@ -77,17 +91,33 @@ class todoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF95E1D3),
-      child: const Center(
-        child: Text(
-          'Hello World',
-          style: TextStyle(
-            color: Color(0xFF569889),
-            fontSize: 30,
+    return Expanded(
+      child: Container(
+        color: Color(backgroundColor),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: Color(textColor),
+              fontSize: 30,
+            ),
           ),
         ),
       ),
     );
+  }
+}
+
+class CreatePage extends StatefulWidget {
+  const CreatePage({super.key});
+
+  @override
+  State<CreatePage> createState() => _CreatePageState();
+}
+
+class _CreatePageState extends State<CreatePage> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
