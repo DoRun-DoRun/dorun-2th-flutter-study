@@ -56,33 +56,35 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
-        body: Column(
+        body: const Column(
           children: [
-            todoList(
-                title: "To Do", textColor: 0x077522, backgroundColor: 0xFF8181),
-            todoList(
+            TodoList(
+                title: "To Do",
+                textColor: 0xff077522,
+                backgroundColor: 0xffFF8181),
+            TodoList(
                 title: "To Schedule",
-                textColor: 0x6677BB,
-                backgroundColor: 0xFCE38A),
-            todoList(
+                textColor: 0xff6677BB,
+                backgroundColor: 0xffFCE38A),
+            TodoList(
                 title: "To Delegate",
-                textColor: 0xBA55D3,
-                backgroundColor: 0xEAFFD0),
-            todoList(
+                textColor: 0xffBA55D3,
+                backgroundColor: 0xffEAFFD0),
+            TodoList(
                 title: "To Delete",
-                textColor: 0x569889,
-                backgroundColor: 0x95E1D3),
+                textColor: 0xff569889,
+                backgroundColor: 0xff95E1D3),
           ],
         ));
   }
 }
 
-class todoList extends StatelessWidget {
+class TodoList extends StatelessWidget {
   final String title;
   final int textColor;
   final int backgroundColor;
 
-  const todoList({
+  const TodoList({
     super.key,
     required this.title,
     required this.textColor,
