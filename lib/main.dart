@@ -32,21 +32,25 @@ class _TodoListPageState extends State<TodoListPage> {
   final List<TodoCategory> todoCategories = [
     TodoCategory(
       title: 'To Do',
+      subTitle: 'Urgent, Important Things.',
       backgroundColor: 0xffFF8181,
       textColor: 0xff077522,
     ),
     TodoCategory(
       title: "To Schedule",
+      subTitle: 'Not Urgent, Important Things.',
       backgroundColor: 0xffFCE38A,
       textColor: 0xff6677BB,
     ),
     TodoCategory(
       title: "To Delegate",
+      subTitle: 'Urgent, Not Important Things.',
       backgroundColor: 0xffEAFFD0,
       textColor: 0xffBA55D3,
     ),
     TodoCategory(
       title: "To Delete",
+      subTitle: 'Not Urgent, Important Things.',
       backgroundColor: 0xff95E1D3,
       textColor: 0xff569889,
     ),
@@ -58,18 +62,16 @@ class _TodoListPageState extends State<TodoListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CreatePage(onTap: createTodoItem),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          )
-        ],
+        leading: IconButton(
+          onPressed: () async {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CreatePage(onTap: createTodoItem),
+              ),
+            );
+          },
+          icon: const Icon(Icons.add),
+        ),
       ),
       body: Column(
         children: [
@@ -77,10 +79,8 @@ class _TodoListPageState extends State<TodoListPage> {
             TodoContainer(
               onTap: () => setActiveIndex(i),
               isSelected: activeIndex == i,
-              title: todoCategories[i].title,
-              textColor: todoCategories[i].textColor,
-              backgroundColor: todoCategories[i].backgroundColor,
-              todoItemList: todoCategories[i].itemList,
+              isInitial: activeIndex == initialIndex,
+              todoCategory: todoCategories[i],
             ),
         ],
       ),
@@ -94,9 +94,18 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   setActiveIndex(int index) {
-    setState(() {
-      activeIndex = index;
-    });
+    if (index == activeIndex) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Slide Right OverFlow action overflow -> clip'),
+        ),
+      );
+    }
+    if (index != activeIndex) {
+      setState(() {
+        activeIndex = index;
+      });
+    }
   }
 }
 
@@ -105,17 +114,14 @@ class TodoContainer extends StatelessWidget {
     super.key,
     required this.onTap,
     required this.isSelected,
-    required this.title,
-    required this.textColor,
-    required this.backgroundColor,
-    required this.todoItemList,
+    required this.todoCategory,
+    required this.isInitial,
   });
-  final List<TodoItem> todoItemList;
+
   final Function() onTap;
   final bool isSelected;
-  final String title;
-  final int textColor;
-  final int backgroundColor;
+  final bool isInitial;
+  final TodoCategory todoCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -125,18 +131,29 @@ class TodoContainer extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: double.infinity,
-          color: Color(backgroundColor),
+          color: Color(todoCategory.backgroundColor),
           child: Column(
             children: [
               Text(
-                title,
+                todoCategory.title,
                 style: TextStyle(
-                  color: Color(textColor),
-                  fontSize: 30,
-                ),
+                    color: Color(todoCategory.textColor),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
               ),
               isSelected
-                  ? TodoListBuilder(list: todoItemList)
+                  ? TodoListBuilder(
+                      list: todoCategory.itemList,
+                      textColor: todoCategory.textColor)
+                  : const SizedBox(),
+              isInitial
+                  ? Text(
+                      todoCategory.subTitle,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color(todoCategory.textColor),
+                      ),
+                    )
                   : const SizedBox(),
             ],
           ),
@@ -150,9 +167,11 @@ class TodoListBuilder extends StatefulWidget {
   const TodoListBuilder({
     super.key,
     required this.list,
+    required this.textColor,
   });
 
   final List<TodoItem> list;
+  final int textColor;
 
   @override
   State<TodoListBuilder> createState() => _TodoListBuilderState();
@@ -162,7 +181,13 @@ class _TodoListBuilderState extends State<TodoListBuilder> {
   @override
   Widget build(BuildContext context) {
     return widget.list.isEmpty
-        ? const Text('ALL DONE !\nClick + Button To Add Todo Items!')
+        ? Text(
+            'ALL DONE !\nClick + Button To Add Todo Items!',
+            style: TextStyle(
+              fontSize: 20,
+              color: Color(widget.textColor),
+            ),
+          )
         : ListView.builder(
             shrinkWrap: true,
             itemCount: widget.list.length,
@@ -183,6 +208,8 @@ class _TodoListBuilderState extends State<TodoListBuilder> {
                   title: Text(
                     widget.list[index].title,
                     style: TextStyle(
+                        fontSize: 20,
+                        color: Color(widget.textColor),
                         decoration: widget.list[index].isChecked
                             ? TextDecoration.lineThrough
                             : TextDecoration.none),
@@ -196,12 +223,14 @@ class _TodoListBuilderState extends State<TodoListBuilder> {
 
 class TodoCategory {
   final String title;
+  final String subTitle;
   final int backgroundColor;
   final int textColor;
   final List<TodoItem> itemList = [];
 
   TodoCategory({
     required this.title,
+    required this.subTitle,
     required this.backgroundColor,
     required this.textColor,
   });
@@ -222,4 +251,4 @@ class TodoItem {
   }
 }
 
-const int initialIndex = 5;
+const int initialIndex = -1;
