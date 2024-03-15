@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CreatePage extends StatefulWidget {
-  const CreatePage({super.key});
+  final Function(int index, String title) onTap;
+  const CreatePage({super.key, required this.onTap});
 
   @override
   State<CreatePage> createState() => _CreatePageState();
 }
 
 class _CreatePageState extends State<CreatePage> {
+  int selectedValue = 0;
+  TextEditingController textFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    int selectedValue = 1;
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
@@ -22,18 +24,33 @@ class _CreatePageState extends State<CreatePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'What to do?',
               style: TextStyle(fontSize: 32),
             ),
-            TextField(),
-            Text(
+            TextField(
+              controller: textFieldController,
+            ),
+            const Text(
               'how important it is??',
+              maxLines: 1,
               style: TextStyle(fontSize: 32),
             ),
             RadioListTile(
-              title: Text('To Do'),
-              subtitle: Text('Urgent, Important Things.'),
+              title: const Text('To Do'),
+              subtitle: const Text('Urgent, Important Things.'),
+              value: 0,
+              groupValue: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value!;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.trailing,
+            ),
+            RadioListTile(
+              title: const Text('To Schedule'),
+              subtitle: const Text('Not Urgent, Important Things.'),
               value: 1,
               groupValue: selectedValue,
               onChanged: (value) {
@@ -44,8 +61,8 @@ class _CreatePageState extends State<CreatePage> {
               controlAffinity: ListTileControlAffinity.trailing,
             ),
             RadioListTile(
-              title: Text('To Schedule'),
-              subtitle: Text('Not Urgent, Important Things.'),
+              title: const Text('To Delegate'),
+              subtitle: const Text('Urgent, Not Important Things'),
               value: 2,
               groupValue: selectedValue,
               onChanged: (value) {
@@ -56,21 +73,9 @@ class _CreatePageState extends State<CreatePage> {
               controlAffinity: ListTileControlAffinity.trailing,
             ),
             RadioListTile(
-              title: Text('To Delegate'),
-              subtitle: Text('Urgent, Not Important Things'),
+              title: const Text('To Delete'),
+              subtitle: const Text('Not Urgent, Not Important Things.'),
               value: 3,
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value!;
-                });
-              },
-              controlAffinity: ListTileControlAffinity.trailing,
-            ),
-            RadioListTile(
-              title: Text('To Delete'),
-              subtitle: Text('Not Urgent, Not Important Things.'),
-              value: 4,
               groupValue: selectedValue,
               onChanged: (value) {
                 setState(() {
@@ -82,8 +87,11 @@ class _CreatePageState extends State<CreatePage> {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
-                child: Text(
+                onPressed: () {
+                  widget.onTap(selectedValue, textFieldController.text);
+                  Navigator.pop(context);
+                },
+                child: const Text(
                   'Create',
                   style: TextStyle(fontSize: 32, color: Colors.black),
                 ),
