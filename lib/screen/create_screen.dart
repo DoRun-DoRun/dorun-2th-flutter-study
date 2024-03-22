@@ -1,9 +1,7 @@
-import 'dart:js';
-
-import 'package:dorun_2th_flutter_study/model/item.dart';
 import 'package:flutter/material.dart';
 
 import '../model/section.dart';
+import '../model/section_item.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({Key? key}) : super(key: key);
@@ -20,7 +18,7 @@ class _CreateScreenState extends State<CreateScreen> {
   late BuildContext context;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus(); //화면이 그려진 후 TextField에 포커스를 줌
@@ -45,7 +43,8 @@ class _CreateScreenState extends State<CreateScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Todo'),
-        bottom: PreferredSize( //AppBar의 하단에 선을 추가
+        bottom: PreferredSize(
+          //AppBar의 하단에 선을 추가
           preferredSize: const Size.fromHeight(0.0),
           child: Container(
             color: Colors.black, //라인 색상
@@ -129,7 +128,7 @@ class _CreateScreenState extends State<CreateScreen> {
         onPressed: () {
           Navigator.pop(
             context,
-            Item(
+            SectionItem(
               title: _textFieldValue,
               index: _selectedIndex,
               completed: false,

@@ -1,5 +1,5 @@
-import 'package:dorun_2th_flutter_study/model/item.dart';
 import 'package:dorun_2th_flutter_study/model/section_height.dart';
+import 'package:dorun_2th_flutter_study/model/section_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   SectionHeightModel? sectionHeightModel;
-  final List<Item> _listItems = []; //Item 클래스의 리스트 생성
+  final List<SectionItem> _listItems = []; //Item 클래스의 리스트 생성
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   //리스트에 Item 추가
-  void _addListItem(Item item) {
+  void _addListItem(SectionItem item) {
     setState(() {
       _listItems.add(item);
     });
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(builder: (context) => CreateScreen()),
     ).then((result) {
       if (result != null) {
-        _addListItem(result as Item);
+        _addListItem(result as SectionItem);
       }
     });
   }
@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     if (sectionHeightModel == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(), //로딩 중 표시
         ),
@@ -91,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
         curve: Curves.fastOutSlowIn, //애니메이션 효과
         height: sectionHeightModel!.sectionHeights[section.index],
         child: GestureDetector(
-          onTap: () { // 섹션 펼치기 및 접기
+          onTap: () {
+            // 섹션 펼치기 및 접기
             setState(() {
               sectionHeightModel!.toggleSectionHeight(section.index);
             });
@@ -132,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// 추가된 item
-  Widget _todoItem(Item item) {
+  Widget _todoItem(SectionItem item) {
     return Dismissible(
       key: UniqueKey(),
       onDismissed: (direction) {

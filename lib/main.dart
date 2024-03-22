@@ -11,7 +11,7 @@ void main() {
   ));
 }
 
-TextTheme customTextTheme = TextTheme(
+TextTheme customTextTheme = const TextTheme(
   displayLarge: TextStyle(
     fontSize: 30,
     fontWeight: FontWeight.w500,
